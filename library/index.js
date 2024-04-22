@@ -22,15 +22,12 @@ function Book(title, author, pages, isRead) {
 
 }
 
-function addBookToLibrary(book) {
-  myLibrary.push(book);
-}
-
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const table = document.querySelector(".table");
+const table = document.querySelector("table");
+const tableBody = document.querySelector("tbody");
 
 // sample books
 const theHobbit = new Book("The Hobbit", "Tolkien", "300", true);
@@ -67,39 +64,38 @@ function createRow(book) {
   row.appendChild(bookAuthor);
   row.appendChild(bookPages);
   row.appendChild(bookStatus);
-  table.appendChild(row);
-
-  console.log("createRow was called");
+  tableBody.appendChild(row);
 }
 
 // display books on table
 function displayBooks(booksArray) {
-  for (let book of myLibrary) {
-    let index = 0; // index for row index , 0 is 1st row not in the header
-    console.log("displayBooks for loop is running");
-    
+  let index = 0; // index for row index , 0 is 1st row not in the header
+  for (let book of booksArray) {  
     createRow(book);
     index++;
   }
 }
-  
+
+function addBookToLibrary(book) {
+  myLibrary.push(book);
+}
+
+displayBooks(myLibrary);
+
+const addBookDialog = document.createElement("dialog");
+
+// controls the addition of new books
 const addBtn = document.querySelector(".add");
 addBtn.addEventListener("click", function() {
-  // const table = document.querySelector(".table");
-
-  // hmm, none of these objects are actually being created?
-
   const addBookFormPanel = document.createElement("div"); 
   const addForm = document.createElement("form");
-  addForm.setAttribute("method", "post");
+  addForm.setAttribute("method", "dialog");
   addBookFormPanel.appendChild(addForm);
-  const tableBtn = document.getElementsByClassName("table-btn");
-  console.log(tableBtn);
-
+  // const tableBtn = document.getElementsByClassName("table-btn");
 
   const bookAttributes = ["title", "author", "pages", "reading"]; 
 
-  for (let att of bookAttributes) { // attribute loop is running
+  for (let att of bookAttributes) { 
 
     const containerDiv = document.createElement("div");
     containerDiv.classList.add("container-div");
@@ -130,14 +126,17 @@ addBtn.addEventListener("click", function() {
   buttonDiv.appendChild(addBookBtn);
   buttonDiv.appendChild(cancelBtn);
   addBookFormPanel.appendChild(buttonDiv);
+  addBookDialog.appendChild(addBookFormPanel);
+
+  addBookDialog.showModal();
 
   // to-do: close the form when the user presses cancel
-  // to-do
+  // to-do: fix the bug where its not displaying the books correctly (multiple duplicates) when you press the add button on the form.
 
   document.body.appendChild(addBookFormPanel); 
 
   addBookBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+    e.preventDefault(); // forms tend to submit to servers. This prevents that.
     
     console.log("submit button pressed");
     let title = document.getElementById("title").value;
@@ -145,15 +144,17 @@ addBtn.addEventListener("click", function() {
     let pages = document.getElementById("pages").value;
     let status = document.getElementById("status");
 
-    addBookToLibrary(new Book(title,author,pages,status));
-    console.log(myLibrary);
-    displayBooks(myLibrary);
-    /* 
-    okay somehow it just started working?
-    for some reason the function to update the display (displayBooks) doesn't work when you call it here but the createRow function works fine.
-    */
+    const newBook = new Book(title,author,pages,status);
+    
+    
+    addBookToLibrary(newBook);
+    createRow(newBook);
+    addBookDialog.close();
+    // we know why now.
+    // it might just be simpler if I just deleted every row before displaying all the books
   });
+
+  cancelBtn.addEventListener("click", () => {
+    addBookDialog.close();
+  })
 })
-
-
-displayBooks(myLibrary);
