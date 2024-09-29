@@ -1,25 +1,26 @@
 const myLibrary = [];
 
 
-// book constructor
-function Book(title, author, pages, isRead) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.isRead = isRead;
+class Book {
+  constructor(title, author, pages, isRead) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.isRead = isRead;
 
-  this.info = function() {
-    let isReadStatement;
-    if (isRead == true) {
-      isReadStatement = "Read";
-    } else {
-      isReadStatement = "Reading";
-    }
-    statement = title + " by " + author + ", " + pages + " pages, " + isReadStatement
+    this.info = function () {
+      let isReadStatement;
+      if (isRead == true) {
+        isReadStatement = "Read";
+      } else {
+        isReadStatement = "Reading";
+      }
+      statement = title + " by " + author + ", " + pages + " pages, " + isReadStatement;
 
-    return statement;
+      return statement;
+    };
+
   }
-
 }
 
 function capitalizeFirstLetter(string) {
@@ -82,7 +83,6 @@ function addBookToLibrary(book) {
 
 displayBooks(myLibrary);
 
-const addBookDialog = document.createElement("dialog");
 
 // controls the addition of new books
 const addBtn = document.querySelector(".add");
@@ -126,9 +126,10 @@ addBtn.addEventListener("click", function() {
   buttonDiv.appendChild(addBookBtn);
   buttonDiv.appendChild(cancelBtn);
   addBookFormPanel.appendChild(buttonDiv);
-  addBookDialog.appendChild(addBookFormPanel);
+  // addBookDialog.appendChild(addBookFormPanel);
 
-  addBookDialog.showModal();
+  // addBookDialog.showModal();
+  // why is this not working?
 
   // to-do: close the form when the user presses cancel
   // to-do: fix the bug where its not displaying the books correctly (multiple duplicates) when you press the add button on the form.
@@ -149,12 +150,12 @@ addBtn.addEventListener("click", function() {
     
     addBookToLibrary(newBook);
     createRow(newBook);
-    addBookDialog.close();
+    // addBookDialog.close();
     // we know why now.
     // it might just be simpler if I just deleted every row before displaying all the books
   });
 
   cancelBtn.addEventListener("click", () => {
-    addBookDialog.close();
+    // addBookDialog.close();
   })
 })
